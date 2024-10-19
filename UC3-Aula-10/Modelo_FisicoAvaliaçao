@@ -1,0 +1,159 @@
+/* Logico_Avaliçao: */
+
+CREATE TABLE Usuario (
+    ID_Usuario Number (3) PRIMARY KEY,
+    Nome Char (25),
+    Email Char (20),
+    Senha Char (13),
+    Data_de_nascimento Number (8),
+    fk_Playlist_ID_Playlist Number (3)
+);
+
+CREATE TABLE Conteudo (
+    ID_Conteudo Number (3) PRIMARY KEY,
+    Duracao Number (18),
+    Data_Lancamento Number (8)
+);
+
+CREATE TABLE Playlist (
+    ID_Playlist Number (3) PRIMARY KEY,
+    Nome_Playlist Char (25),
+    Numero_Musicas Number (100),
+    Duracao_Total Number (50)
+);
+
+CREATE TABLE Assinatura (
+    ID_Assinatura Number (3) PRIMARY KEY,
+    Tipo_De_Plano Char (50),
+    Status_Pagamento Char (30),
+    Valor_Mensal Numbe (30),
+    Pagamento Char (20),
+    fk_Usuario_ID_Usuario Number (3)
+);
+
+CREATE TABLE Album (
+    ID_Album Number (3) PRIMARY KEY,
+    Duracao_Total Number (40),
+    Tipo_Album Char (43),
+    Numero_Reproducoes Number (150)
+);
+
+CREATE TABLE Avaliacao (
+    ID_Avaliacao Number (3) PRIMARY KEY,
+    Nota Number (20),
+    Comentario Char (40),
+    Data_Avaliacao Number(8)
+);
+
+CREATE TABLE Artista (
+    ID_Artista Number (3) PRIMARY KEY,
+    Nome_Artista Char (25),
+    Numero_Vizualizado Number (100),
+    Artistas_Relacionados Char (60),
+    fk_Album_ID_Album Number (3)
+);
+
+CREATE TABLE E__Assoc__1_Ouve (
+    fk_Conteudo_ID_Conteudo Number (3),
+    fk_Usuario_ID_Usuario Number (3)
+);
+
+CREATE TABLE Musica (
+    ID_Musica Number (3),
+    Titulo Char (30),
+    Duracao Number (40),
+    Genero_Musical Char (50),
+    fk_Conteudo_ID_Conteudo Number (3),
+    PRIMARY KEY (ID_Musica, fk_Conteudo_ID_Conteudo)
+);
+
+CREATE TABLE Contem (
+    fk_Playlist_ID_Playlist Number (3),
+    fk_Musica_ID_Musica Number (3),
+    fk_Musica_fk_Conteudo_ID_Conteudo Number (3)
+);
+
+CREATE TABLE Faz (
+    fk_Artista_ID_Artista Number (3),
+    fk_Musica_ID_Musica Number (3),
+    fk_Musica_fk_Conteudo_ID_Conteudo Number (3)
+);
+
+CREATE TABLE Contem (
+    fk_Album_ID_Album Number (3),
+    fk_Musica_ID_Musica Number (3),
+    fk_Musica_fk_Conteudo_ID_Conteudo Number (3)
+);
+
+CREATE TABLE Tem (
+    fk_Conteudo_ID_Conteudo Number (3),
+    fk_Avaliacao_ID_Avaliacao Number (3)
+);
+ 
+ALTER TABLE Usuario ADD CONSTRAINT FK_Usuario_2
+    FOREIGN KEY (fk_Playlist_ID_Playlist)
+    REFERENCES Playlist (ID_Playlist)
+    ON DELETE RESTRICT;
+ 
+ALTER TABLE Assinatura ADD CONSTRAINT FK_Assinatura_2
+    FOREIGN KEY (fk_Usuario_ID_Usuario)
+    REFERENCES Usuario (ID_Usuario)
+    ON DELETE RESTRICT;
+ 
+ALTER TABLE Artista ADD CONSTRAINT FK_Artista_2
+    FOREIGN KEY (fk_Album_ID_Album)
+    REFERENCES Album (ID_Album)
+    ON DELETE RESTRICT;
+ 
+ALTER TABLE E__Assoc__1_Ouve ADD CONSTRAINT FK_E__Assoc__1_Ouve_1
+    FOREIGN KEY (fk_Conteudo_ID_Conteudo)
+    REFERENCES Conteudo (ID_Conteudo);
+ 
+ALTER TABLE E__Assoc__1_Ouve ADD CONSTRAINT FK_E__Assoc__1_Ouve_2
+    FOREIGN KEY (fk_Usuario_ID_Usuario)
+    REFERENCES Usuario (ID_Usuario);
+ 
+ALTER TABLE Musica ADD CONSTRAINT FK_Musica_2
+    FOREIGN KEY (fk_Conteudo_ID_Conteudo)
+    REFERENCES Conteudo (ID_Conteudo)
+    ON DELETE CASCADE;
+ 
+ALTER TABLE Contem ADD CONSTRAINT FK_Contem_1
+    FOREIGN KEY (fk_Playlist_ID_Playlist)
+    REFERENCES Playlist (ID_Playlist)
+    ON DELETE RESTRICT;
+ 
+ALTER TABLE Contem ADD CONSTRAINT FK_Contem_2
+    FOREIGN KEY (fk_Musica_ID_Musica, fk_Musica_fk_Conteudo_ID_Conteudo)
+    REFERENCES Musica (ID_Musica, fk_Conteudo_ID_Conteudo)
+    ON DELETE RESTRICT;
+ 
+ALTER TABLE Faz ADD CONSTRAINT FK_Faz_1
+    FOREIGN KEY (fk_Artista_ID_Artista)
+    REFERENCES Artista (ID_Artista)
+    ON DELETE RESTRICT;
+ 
+ALTER TABLE Faz ADD CONSTRAINT FK_Faz_2
+    FOREIGN KEY (fk_Musica_ID_Musica, fk_Musica_fk_Conteudo_ID_Conteudo)
+    REFERENCES Musica (ID_Musica, fk_Conteudo_ID_Conteudo)
+    ON DELETE RESTRICT;
+ 
+ALTER TABLE Contem ADD CONSTRAINT FK_Contem_1
+    FOREIGN KEY (fk_Album_ID_Album)
+    REFERENCES Album (ID_Album)
+    ON DELETE RESTRICT;
+ 
+ALTER TABLE Contem ADD CONSTRAINT FK_Contem_2
+    FOREIGN KEY (fk_Musica_ID_Musica, fk_Musica_fk_Conteudo_ID_Conteudo)
+    REFERENCES Musica (ID_Musica, fk_Conteudo_ID_Conteudo)
+    ON DELETE SET NULL;
+ 
+ALTER TABLE Tem ADD CONSTRAINT FK_Tem_1
+    FOREIGN KEY (fk_Conteudo_ID_Conteudo)
+    REFERENCES Conteudo (ID_Conteudo)
+    ON DELETE SET NULL;
+ 
+ALTER TABLE Tem ADD CONSTRAINT FK_Tem_2
+    FOREIGN KEY (fk_Avaliacao_ID_Avaliacao)
+    REFERENCES Avaliacao (ID_Avaliacao)
+    ON DELETE SET NULL;
